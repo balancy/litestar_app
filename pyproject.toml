@@ -1,0 +1,18 @@
+[project]
+name = "litestar-project-template"
+version = "0.1.0"
+description = "Template to start with litestar framework"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["litestar[standard]>=2.12.1"]
+
+[tool.uv]
+dev-dependencies = ["ruff>=0.6.8"]
+
+[tool.ruff]
+lint.select = ["ALL"]
+lint.ignore = ["D203", "D213", "TCH001", "TCH002", "TCH003"]
+line-length = 79
+
+[tool.ruff.lint.mccabe]
+max-complexity = 5

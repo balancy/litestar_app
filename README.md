@@ -1,0 +1,1 @@
+# Project template using UV dependency manager + Litestar framework
