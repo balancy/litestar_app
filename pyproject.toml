@@ -4,7 +4,13 @@ version = "0.1.0"
 description = "Template to start with litestar framework"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["litestar[standard]>=2.12.1"]
+dependencies = [
+    "litestar[standard]>=2.12.1",
+    "psycopg2-binary>=2.9.9",
+    "environs>=11.0.0",
+    "sqlalchemy>=2.0.35",
+    "asyncpg>=0.29.0",
+]
 
 [tool.uv]
 dev-dependencies = ["ruff>=0.6.8"]
