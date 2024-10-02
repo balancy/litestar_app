@@ -6,10 +6,9 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "litestar[standard]>=2.12.1",
-    "psycopg2-binary>=2.9.9",
     "environs>=11.0.0",
     "sqlalchemy>=2.0.35",
-    "asyncpg>=0.29.0",
+    "psycopg[binary]>=3.2.3",
 ]
 
 [tool.uv]

@@ -10,7 +10,7 @@ services:
       - UVICORN_LOG_LEVEL=info
     depends_on:
       - postgres
-    command: uvicorn app:app
+    command: uvicorn app:app --reload
     develop:
       watch:
         - action: sync

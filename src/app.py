@@ -3,8 +3,8 @@
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
+import psycopg
 from litestar import Litestar
-from sqlalchemy.ext.asyncio import create_async_engine
 
 from config import DB_URI
 from controllers import BooksController
@@ -13,15 +13,15 @@ from controllers import BooksController
 @asynccontextmanager
 async def db_connection(app: Litestar) -> AsyncGenerator[None, None]:
     """Create and dispose of the database connection."""
-    engine = getattr(app.state, "engine", None)
-    if engine is None:
-        engine = create_async_engine(DB_URI)
-        app.state.engine = engine
+    connection = getattr(app.state, "db_connection", None)
+    if connection is None:
+        connection = await psycopg.AsyncConnection.connect(DB_URI)
+        app.state.db_connection = connection
 
     try:
         yield
     finally:
-        await engine.dispose()
+        await connection.close()
 
 
 app = Litestar(
