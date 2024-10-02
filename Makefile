@@ -1,10 +1,13 @@
-all: run-docker
+all: up
 
-run-local:
+run-app:
 	@uvicorn app:app --reload
 
-run-docker:
+up:
 	@docker-compose up --build --watch
+
+down:
+	@docker-compose down
 
 lint:
 	@ruff check .

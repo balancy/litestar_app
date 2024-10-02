@@ -1,30 +1,21 @@
 """Main application."""
 
-from collections.abc import AsyncGenerator
-from contextlib import asynccontextmanager
-
-import psycopg
 from litestar import Litestar
+from litestar.contrib.sqlalchemy.base import UUIDBase
 
-from config import DB_URI
 from controllers import BooksController
+from db.connection import sqlalchemy_config, sqlalchemy_plugin
 
 
-@asynccontextmanager
-async def db_connection(app: Litestar) -> AsyncGenerator[None, None]:
-    """Create and dispose of the database connection."""
-    connection = getattr(app.state, "db_connection", None)
-    if connection is None:
-        connection = await psycopg.AsyncConnection.connect(DB_URI)
-        app.state.db_connection = connection
-
-    try:
-        yield
-    finally:
-        await connection.close()
+async def on_startup() -> None:
+    """App startup event."""
+    async with sqlalchemy_config.get_engine().begin() as conn:
+        await conn.run_sync(UUIDBase.metadata.create_all)
 
 
 app = Litestar(
-    lifespan=[db_connection],
+    on_startup=[on_startup],
+    plugins=[sqlalchemy_plugin],
     route_handlers=[BooksController],
+    debug=True,
 )
