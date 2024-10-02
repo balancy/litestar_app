@@ -7,4 +7,6 @@ COPY pyproject.toml uv.lock ./
 
 RUN uv sync --frozen
 
+ENV PATH="/app/.venv/bin:$PATH"
+
 COPY src/ .

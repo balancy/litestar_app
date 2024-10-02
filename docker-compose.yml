@@ -1,8 +1,6 @@
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     container_name: litestar-app
     ports:
       - "8000:8000"
@@ -10,7 +8,20 @@ services:
       - UVICORN_HOST=0.0.0.0
       - UVICORN_PORT=8000
       - UVICORN_LOG_LEVEL=info
-    command: /app/.venv/bin/uvicorn app:app --reload
+    depends_on:
+      - postgres
+    command: uvicorn app:app
+    develop:
+      watch:
+        - action: sync
+          path: src
+          target: /app
+          ignore:
+            - .venv/
+
+        - action: rebuild
+          path: ./pyproject.toml
+
 
   postgres:
     image: postgres:16
