@@ -1,4 +1,4 @@
-"""App controllers."""
+"""Book controller."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from litestar.di import Provide
 
 from db.models import BookModel
 from db.repositories import BookRepository, provide_books_repo
-from models import Book, BookCreate, BookUpdate
+from models.book_models import Book, BookCreate, BookUpdate
 
 
 class BooksController(Controller):
@@ -17,6 +17,7 @@ class BooksController(Controller):
 
     path = "/books"
     dependencies = {"books_repo": Provide(provide_books_repo)}
+    tags = ["books"]
 
     @post(name="post_book", description="Create a new book.")
     async def create_book(self, books_repo: BookRepository, data: BookCreate) -> Book:
@@ -46,15 +47,15 @@ class BooksController(Controller):
     @patch(
         path="/{book_id:uuid}",
         name="patch_book",
-        description="Partially update a book.",
+        description="Update a book.",
     )
-    async def partial_update_book(
+    async def update_book(
         self,
         books_repo: BookRepository,
         book_id: UUID,
         data: BookUpdate,
     ) -> Book:
-        """Partial update a book."""
+        """Update a book."""
         raw_obj = data.model_dump(exclude_unset=True, exclude_none=True)
         raw_obj.update({"id": book_id})
         obj = await books_repo.update(BookModel(**raw_obj))

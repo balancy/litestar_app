@@ -1,14 +1,8 @@
-"""Validation models."""
+"""Book validation models."""
 
 from uuid import UUID
 
-from pydantic import BaseModel as _BaseModel
-
-
-class BaseModel(_BaseModel):
-    """Base model."""
-
-    model_config = {"from_attributes": True}
+from models.base_models import BaseModel
 
 
 class Book(BaseModel):
@@ -17,6 +11,7 @@ class Book(BaseModel):
     id: UUID
     title: str
     description: str
+    author_id: UUID
 
 
 class BookCreate(BaseModel):
@@ -24,6 +19,7 @@ class BookCreate(BaseModel):
 
     title: str
     description: str
+    author_id: UUID
 
 
 class BookUpdate(BaseModel):
@@ -31,3 +27,4 @@ class BookUpdate(BaseModel):
 
     title: str | None = None
     description: str | None = None
+    author_id: UUID | None = None

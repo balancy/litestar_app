@@ -3,7 +3,7 @@
 from litestar import Litestar
 from litestar.contrib.sqlalchemy.base import UUIDBase
 
-from controllers import BooksController
+from controllers import AuthorsController, BooksController
 from db.connection import sqlalchemy_config, sqlalchemy_plugin
 
 
@@ -16,6 +16,6 @@ async def on_startup() -> None:
 app = Litestar(
     on_startup=[on_startup],
     plugins=[sqlalchemy_plugin],
-    route_handlers=[BooksController],
+    route_handlers=[BooksController, AuthorsController],
     debug=True,
 )
