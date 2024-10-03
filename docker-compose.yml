@@ -8,20 +8,14 @@ services:
       - UVICORN_HOST=0.0.0.0
       - UVICORN_PORT=8000
       - UVICORN_LOG_LEVEL=info
+      - PYTHONPATH=/app/src
     depends_on:
       postgres:
         condition: service_healthy
-    command: uvicorn app:app --reload
-    develop:
-      watch:
-        - action: sync
-          path: src
-          target: /app
-          ignore:
-            - .venv/
-
-        - action: rebuild
-          path: ./pyproject.toml
+    command: >
+      bash -c "alembic upgrade head && uvicorn app:app --reload"
+    volumes:
+      - ./src:/app/src
 
 
   postgres:

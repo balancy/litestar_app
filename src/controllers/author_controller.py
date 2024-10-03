@@ -36,7 +36,8 @@ class AuthorsController(Controller):
 
     @get(name="get_authors", description="List authors.")
     async def list_authors(
-        self, authors_repo: AuthorRepository,
+        self,
+        authors_repo: AuthorRepository,
     ) -> list[Author]:
         """List authors."""
         author_rows = await authors_repo.list()

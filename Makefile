@@ -4,7 +4,7 @@ run-app:
 	@uvicorn app:app --reload
 
 up:
-	@docker-compose up --build --watch
+	@docker-compose up -d --build
 
 down:
 	@docker-compose down

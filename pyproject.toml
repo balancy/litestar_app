@@ -17,6 +17,7 @@ dev-dependencies = ["ruff>=0.6.8", "black>=24.8.0"]
 lint.select = ["ALL"]
 lint.ignore = ["D203", "D213", "TCH001", "TCH002", "TCH003", "RUF012"]
 line-length = 79
+exclude = ["migrations"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 5

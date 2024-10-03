@@ -357,7 +357,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "environs", specifier = ">=11.0.0" },
-    { name = "litestar", extras = ["pydantic", "sqlalchemy", "standard"], specifier = ">=2.12.1" },
+    { name = "litestar", extras = ["alembic", "pydantic", "sqlalchemy", "standard"], specifier = ">=2.12.1" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.2.3" },
 ]
 
