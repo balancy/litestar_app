@@ -35,7 +35,9 @@ class AuthorsController(Controller):
         return Author.model_validate(new_row)
 
     @get(name="get_authors", description="List authors.")
-    async def list_authors(self, authors_repo: AuthorRepository) -> list[Author]:
+    async def list_authors(
+        self, authors_repo: AuthorRepository,
+    ) -> list[Author]:
         """List authors."""
         author_rows = await authors_repo.list()
         return [Author.model_validate(_) for _ in author_rows]
@@ -47,7 +49,9 @@ class AuthorsController(Controller):
         dependencies={"authors_repo": Provide(provide_author_details_repo)},
     )
     async def get_author(
-        self, authors_repo: AuthorRepository, author_id: UUID
+        self,
+        authors_repo: AuthorRepository,
+        author_id: UUID,
     ) -> Author:
         """Get a author."""
         obj = await authors_repo.get(author_id)

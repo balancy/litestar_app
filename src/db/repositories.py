@@ -3,7 +3,7 @@
 from litestar.contrib.sqlalchemy.repository import SQLAlchemyAsyncRepository
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import selectinload
 
 from db.models import AuthorModel, BookModel
 
@@ -30,9 +30,11 @@ async def provide_authors_repo(db_session: AsyncSession) -> AuthorRepository:
     return AuthorRepository(session=db_session)
 
 
-async def provide_author_details_repo(db_session: AsyncSession) -> AuthorRepository:
+async def provide_author_details_repo(
+    db_session: AsyncSession,
+) -> AuthorRepository:
     """Provide the authors repository."""
     return AuthorRepository(
-        statement=select(AuthorModel).options(joinedload(AuthorModel.books)),
+        statement=select(AuthorModel).options(selectinload(AuthorModel.books)),
         session=db_session,
     )

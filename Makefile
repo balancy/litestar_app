@@ -11,3 +11,4 @@ down:
 
 lint:
 	@ruff check .
+	@black .

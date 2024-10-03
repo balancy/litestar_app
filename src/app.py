@@ -3,7 +3,8 @@
 from litestar import Litestar
 from litestar.contrib.sqlalchemy.base import UUIDBase
 
-from controllers import AuthorsController, BooksController
+from controllers.author_controller import AuthorsController
+from controllers.book_controller import BooksController
 from db.connection import sqlalchemy_config, sqlalchemy_plugin
 
 

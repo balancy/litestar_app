@@ -2,6 +2,7 @@
 
 from uuid import UUID
 
+from models.author_models import Author
 from models.base_models import BaseModel
 
 
@@ -11,7 +12,7 @@ class Book(BaseModel):
     id: UUID
     title: str
     description: str
-    author_id: UUID
+    author: Author
 
 
 class BookCreate(BaseModel):

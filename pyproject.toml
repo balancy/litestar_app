@@ -11,12 +11,15 @@ dependencies = [
 ]
 
 [tool.uv]
-dev-dependencies = ["ruff>=0.6.8"]
+dev-dependencies = ["ruff>=0.6.8", "black>=24.8.0"]
 
 [tool.ruff]
 lint.select = ["ALL"]
-lint.ignore = ["D203", "D213", "TCH001", "TCH002", "TCH003"]
+lint.ignore = ["D203", "D213", "TCH001", "TCH002", "TCH003", "RUF012"]
 line-length = 79
 
 [tool.ruff.lint.mccabe]
 max-complexity = 5
+
+[tool.black]
+line-length = 79

@@ -18,7 +18,9 @@ class BookModel(UUIDBase):
     title: Mapped[str]
     description: Mapped[str]
 
-    author_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("author.id"))
+    author_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("author.id", ondelete="CASCADE"),
+    )
     author: Mapped[AuthorModel] = relationship(
         lazy="joined",
         innerjoin=True,

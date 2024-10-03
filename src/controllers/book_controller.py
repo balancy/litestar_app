@@ -20,7 +20,11 @@ class BooksController(Controller):
     tags = ["books"]
 
     @post(name="post_book", description="Create a new book.")
-    async def create_book(self, books_repo: BookRepository, data: BookCreate) -> Book:
+    async def create_book(
+        self,
+        books_repo: BookRepository,
+        data: BookCreate,
+    ) -> Book:
         """Create a book."""
         new_row = await books_repo.add(BookModel(**data.model_dump()))
         await books_repo.session.commit()
@@ -33,13 +37,25 @@ class BooksController(Controller):
         return [Book.model_validate(_) for _ in book_rows]
 
     @get(path="/{book_id:uuid}", name="get_book", description="Get a book.")
-    async def get_book(self, books_repo: BookRepository, book_id: UUID) -> Book:
+    async def get_book(
+        self,
+        books_repo: BookRepository,
+        book_id: UUID,
+    ) -> Book:
         """Get a book."""
         obj = await books_repo.get(book_id)
         return Book.model_validate(obj)
 
-    @delete(path="/{book_id:uuid}", name="delete_book", description="Delete a book.")
-    async def delete_book(self, books_repo: BookRepository, book_id: UUID) -> None:
+    @delete(
+        path="/{book_id:uuid}",
+        name="delete_book",
+        description="Delete a book.",
+    )
+    async def delete_book(
+        self,
+        books_repo: BookRepository,
+        book_id: UUID,
+    ) -> None:
         """Delete a book."""
         await books_repo.delete(book_id)
         await books_repo.session.commit()
