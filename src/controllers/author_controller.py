@@ -7,86 +7,73 @@ from uuid import UUID
 from litestar import Controller, delete, get, patch, post
 from litestar.di import Provide
 
-from db.models import AuthorModel
+from db.dtos import AuthorCreateDTO, AuthorUpdateDTO
+from db.models import Author
 from db.repositories import (
-    AuthorRepository,
+    AuthorRepo,
     provide_author_details_repo,
     provide_authors_repo,
 )
-from models.author_models import Author, AuthorCreate, AuthorUpdate
 
 
 class AuthorsController(Controller):
     """Authors controller."""
 
     path = "/authors"
-    dependencies = {"authors_repo": Provide(provide_authors_repo)}
+    dependencies = {"repo": Provide(provide_authors_repo)}
     tags = ["authors"]
 
-    @post(name="post_author", description="Create a new author.")
-    async def create_author(
-        self,
-        authors_repo: AuthorRepository,
-        data: AuthorCreate,
-    ) -> Author:
-        """Create a author."""
-        new_row = await authors_repo.add(AuthorModel(**data.model_dump()))
-        await authors_repo.session.commit()
-        return Author.model_validate(new_row)
+    @post(
+        name="post_author",
+        description="Create a new author.",
+        dto=AuthorCreateDTO,
+    )
+    async def create_author(self, repo: AuthorRepo, data: Author) -> Author:
+        """Create a new author."""
+        new_author = await repo.add(data)
+        await repo.session.commit()
+        return new_author
 
     @get(name="get_authors", description="List authors.")
-    async def list_authors(
-        self,
-        authors_repo: AuthorRepository,
-    ) -> list[Author]:
+    async def list_authors(self, repo: AuthorRepo) -> list[Author]:
         """List authors."""
-        author_rows = await authors_repo.list()
-        return [Author.model_validate(_) for _ in author_rows]
+        return await repo.list()
 
     @get(
         path="/{author_id:uuid}",
         name="get_author",
-        description="Get a author.",
-        dependencies={"authors_repo": Provide(provide_author_details_repo)},
+        description="Get an author.",
+        dependencies={"repo": Provide(provide_author_details_repo)},
     )
-    async def get_author(
-        self,
-        authors_repo: AuthorRepository,
-        author_id: UUID,
-    ) -> Author:
+    async def get_author(self, repo: AuthorRepo, author_id: UUID) -> Author:
         """Get a author."""
-        obj = await authors_repo.get(author_id)
-        return Author.model_validate(obj)
+        return await repo.get(author_id)
 
     @delete(
         path="/{author_id:uuid}",
         name="delete_author",
-        description="Delete a author.",
+        description="Delete an author.",
     )
-    async def delete_author(
-        self,
-        authors_repo: AuthorRepository,
-        author_id: UUID,
-    ) -> None:
-        """Delete a author."""
-        await authors_repo.delete(author_id)
-        await authors_repo.session.commit()
+    async def delete_author(self, repo: AuthorRepo, author_id: UUID) -> None:
+        """Delete an author."""
+        await repo.delete(author_id)
+        await repo.session.commit()
 
     @patch(
         path="/{author_id:uuid}",
         name="patch_author",
-        description="Partially update a author.",
-        dependencies={"authors_repo": Provide(provide_author_details_repo)},
+        description="Update an author.",
+        dependencies={"repo": Provide(provide_author_details_repo)},
+        dto=AuthorUpdateDTO,
     )
     async def update_author(
         self,
-        authors_repo: AuthorRepository,
+        repo: AuthorRepo,
         author_id: UUID,
-        data: AuthorUpdate,
+        data: Author,
     ) -> Author:
-        """Update a author."""
-        raw_obj = data.model_dump(exclude_unset=True, exclude_none=True)
-        raw_obj.update({"id": author_id})
-        obj = await authors_repo.update(AuthorModel(**raw_obj))
-        await authors_repo.session.commit()
-        return Author.model_validate(obj)
+        """Update an author."""
+        data.id = author_id
+        author = await repo.update(data)
+        await repo.session.commit()
+        return author

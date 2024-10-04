@@ -5,36 +5,34 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from db.models import AuthorModel, BookModel
+from db.models import Author, Book
 
 
-class BookRepository(SQLAlchemyAsyncRepository[BookModel]):
+class BookRepo(SQLAlchemyAsyncRepository[Book]):
     """Book repository."""
 
-    model_type = BookModel
+    model_type = Book
 
 
-class AuthorRepository(SQLAlchemyAsyncRepository[AuthorModel]):
+class AuthorRepo(SQLAlchemyAsyncRepository[Author]):
     """Author repository."""
 
-    model_type = AuthorModel
+    model_type = Author
 
 
-async def provide_books_repo(db_session: AsyncSession) -> BookRepository:
+async def provide_books_repo(db_session: AsyncSession) -> BookRepo:
     """Provide the books repository."""
-    return BookRepository(session=db_session)
+    return BookRepo(session=db_session)
 
 
-async def provide_authors_repo(db_session: AsyncSession) -> AuthorRepository:
+async def provide_authors_repo(db_session: AsyncSession) -> AuthorRepo:
     """Provide the authors repository."""
-    return AuthorRepository(session=db_session)
+    return AuthorRepo(session=db_session)
 
 
-async def provide_author_details_repo(
-    db_session: AsyncSession,
-) -> AuthorRepository:
+async def provide_author_details_repo(db_session: AsyncSession) -> AuthorRepo:
     """Provide the authors repository."""
-    return AuthorRepository(
-        statement=select(AuthorModel).options(selectinload(AuthorModel.books)),
+    return AuthorRepo(
+        statement=select(Author).options(selectinload(Author.books)),
         session=db_session,
     )
