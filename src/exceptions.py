@@ -60,7 +60,7 @@ def unhandled_exception_handler(_: Request, exc: Exception) -> Response:
     )
 
 
-EXCEPTION_HANDLERS: ExceptionHandlersMap = {
+exception_handlers: ExceptionHandlersMap = {
     HTTPException: http_exception_handler,
     IntegrityError: db_integrity_exception_handler,
     DatabaseError: db_exception_handler,

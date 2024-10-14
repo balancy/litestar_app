@@ -9,6 +9,7 @@ services:
       - UVICORN_PORT=8000
       - UVICORN_LOG_LEVEL=info
       - PYTHONPATH=/app/src
+      - DEBUG=False
     depends_on:
       postgres:
         condition: service_healthy
