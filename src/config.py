@@ -9,3 +9,4 @@ DB_URI = env.str(
     "DB_URI",
     "postgresql+psycopg://postgres:postgres@postgres:5432/db",
 )
+DEBUG = env.bool("DEBUG", True)

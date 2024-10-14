@@ -26,9 +26,9 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=db
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
       interval: 2s
       retries: 5
-      start_interval: 1s
+      start_interval: 2s
     # volumes:
     #   - postgres_data:/var/lib/postgresql/data
