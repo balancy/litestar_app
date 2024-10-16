@@ -17,6 +17,7 @@ services:
       bash -c "alembic upgrade head && uvicorn app:app --reload"
     volumes:
       - ./src:/app/src
+      - session_data:/app/session_data
 
 
   postgres:
@@ -33,3 +34,6 @@ services:
       start_interval: 2s
     # volumes:
     #   - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  session_data:
