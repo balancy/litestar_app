@@ -35,5 +35,18 @@ services:
     # volumes:
     #   - postgres_data:/var/lib/postgresql/data
 
+  postgres_test:
+    image: postgres:16
+    container_name: litestar-postgres-test
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db_test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 2s
+      retries: 5
+      start_interval: 2s
+
 volumes:
   session_data:

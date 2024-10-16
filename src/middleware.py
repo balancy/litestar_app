@@ -16,7 +16,7 @@ compression_config = CompressionConfig(
     "gzip",
     gzip_compress_level=GZIP_COMPRESS_LEVEL,
 )
-rate_limit_config = RateLimitConfig(rate_limit=("second", 1))
+rate_limit_config = RateLimitConfig(rate_limit=("second", 10))
 session_config = ServerSideSessionConfig(
     httponly=True,
     max_age=COOKIES_MAX_AGE,

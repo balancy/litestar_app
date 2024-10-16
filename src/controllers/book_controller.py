@@ -34,7 +34,7 @@ class BooksController(Controller):
         await repo.session.commit()
         return new_book
 
-    @get(name="get_books", description="List books.")
+    @get(name="list_books", description="List books.")
     async def list_books(self, repo: BookRepo) -> list[Book]:
         """List books."""
         return await repo.list()

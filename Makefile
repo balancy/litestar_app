@@ -15,3 +15,6 @@ lint:
 
 clear:
 	@docker system prune -f
+
+test:
+	@docker exec litestar-app pytest

@@ -34,7 +34,7 @@ class AuthorsController(Controller):
         await repo.session.commit()
         return new_author
 
-    @get(name="get_authors", description="List authors.")
+    @get(name="list_authors", description="List authors.")
     async def list_authors(self, repo: AuthorRepo) -> list[Author]:
         """List authors."""
         return await repo.list()

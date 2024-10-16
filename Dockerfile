@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY pyproject.toml uv.lock alembic.ini ./
 
-RUN uv sync --frozen
+RUN uv sync --frozen --dev
 
 ENV PATH="/app/.venv/bin:$PATH"
 

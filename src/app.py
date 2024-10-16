@@ -1,6 +1,7 @@
 """Main application."""
 
 from litestar import Litestar
+from litestar.openapi import OpenAPIConfig
 
 from config import DEBUG
 from db.connection import sqlalchemy_plugin
@@ -24,4 +25,5 @@ app = Litestar(
     compression_config=compression_config,
     middleware=[rate_limit_config.middleware, session_config.middleware],
     stores=stores,
+    openapi_config=OpenAPIConfig(title="Books API", version="0.0.1"),
 )
