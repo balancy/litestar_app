@@ -11,16 +11,40 @@ dependencies = [
 ]
 
 [tool.uv]
-dev-dependencies = ["ruff>=0.6.8", "black>=24.8.0"]
+dev-dependencies = [
+  "ruff>=0.6.8",
+  "black>=24.8.0",
+  "pytest-asyncio>=0.24.0",
+  "pytest-cov>=5.0.0",
+  "sqlalchemy-utils>=0.41.2",
+]
 
 [tool.ruff]
 lint.select = ["ALL"]
 lint.ignore = ["D203", "D213", "TCH001", "TCH002", "TCH003", "RUF012"]
 line-length = 79
-exclude = ["migrations"]
+exclude = ["migrations", "tests"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 5
 
 [tool.black]
 line-length = 79
+
+[tool.pytest.ini_options]
+addopts = [
+  "--tb=long",
+  "--strict-markers",
+  "-vv",
+  "--cov-report=term-missing",
+  "--cov=.",
+]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+log_cli_level = "WARNING"
+log_level = "WARNING"
+
+[tool.coverage.report]
+fail_under = 85
+skip_empty = true
+skip_covered = true

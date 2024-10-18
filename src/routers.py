@@ -6,6 +6,6 @@ from controllers.author_controller import AuthorsController
 from controllers.book_controller import BooksController
 
 api_router = Router(
-    path="/api",
+    path="/",
     route_handlers=[BooksController, AuthorsController],
 )

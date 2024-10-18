@@ -4,7 +4,7 @@ run:
 	@cd src && uvicorn app:app --reload
 
 up:
-	@docker-compose up -d --build
+	@docker-compose up -d --build --remove-orphans
 
 down:
 	@docker-compose down
@@ -15,3 +15,6 @@ lint:
 
 clear:
 	@docker system prune -f
+
+test:
+	@docker exec litestar-app pytest

@@ -3,7 +3,9 @@
 from advanced_alchemy.exceptions import NotFoundError
 from litestar import MediaType, Request, Response
 from litestar.exceptions import HTTPException
+from litestar.exceptions.http_exceptions import NoRouteMatchFoundException
 from litestar.status_codes import (
+    HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
     HTTP_409_CONFLICT,
     HTTP_500_INTERNAL_SERVER_ERROR,
@@ -18,6 +20,18 @@ def http_exception_handler(_: Request, exc: HTTPException) -> Response:
         media_type=MediaType.TEXT,
         content=str(exc),
         status_code=exc.status_code,
+    )
+
+
+def no_route_match_found_exception_handler(
+    _: Request,
+    exc: NoRouteMatchFoundException,
+) -> Response:
+    """Handle no route match found exceptions."""
+    return Response(
+        media_type=MediaType.TEXT,
+        content=str(exc),
+        status_code=HTTP_400_BAD_REQUEST,
     )
 
 
@@ -62,6 +76,7 @@ def unhandled_exception_handler(_: Request, exc: Exception) -> Response:
 
 exception_handlers: ExceptionHandlersMap = {
     HTTPException: http_exception_handler,
+    NoRouteMatchFoundException: no_route_match_found_exception_handler,
     IntegrityError: db_integrity_exception_handler,
     DatabaseError: db_exception_handler,
     NotFoundError: db_not_found_exception_handler,
