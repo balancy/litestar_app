@@ -10,73 +10,71 @@ from litestar.contrib.sqlalchemy.plugins import (
     SQLAlchemyPlugin,
 )
 from litestar.testing import AsyncTestClient
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
+from sqlalchemy_utils import create_database, database_exists, drop_database
+from advanced_alchemy import AsyncTestClient
 
 from db.models import Author, UUIDBase
 from logger import structlog_plugin
 from routers import api_router
 
-TEST_DB_URI = (
-    "postgresql+psycopg://postgres:postgres@postgres_test:5432/db_test"
+TEST_DB_URI = "postgresql+psycopg://postgres:postgres@postgres:5432/db_test"
+
+sqlalchemy_config = SQLAlchemyAsyncConfig(
+    connection_string=TEST_DB_URI,
+    session_config=AsyncSessionConfig(expire_on_commit=False),
 )
+sqlalchemy_plugin = SQLAlchemyPlugin(config=sqlalchemy_config)
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
 def test_app() -> Litestar:
     """Create and configure the test app."""
-    sqlalchemy_plugin = SQLAlchemyPlugin(
-        config=SQLAlchemyAsyncConfig(
-            connection_string=TEST_DB_URI,
-            session_config=AsyncSessionConfig(expire_on_commit=False),
-        ),
-    )
-
     return Litestar(
         route_handlers=[api_router],
         plugins=[sqlalchemy_plugin, structlog_plugin],
-        debug=True,
-        # exception_handlers=exception_handlers,
     )
+
+
+@pytest.fixture(scope="session")
+async def test_engine() -> AsyncGenerator[AsyncEngine, None]:
+    """Setup test database."""
+    if not database_exists(TEST_DB_URI):
+        create_database(TEST_DB_URI)
+
+    test_engine = sqlalchemy_config.get_engine()
+
+    async with test_engine.begin() as conn:
+        await conn.run_sync(UUIDBase.metadata.create_all)
+
+    yield test_engine
+
+    async with test_engine.begin() as conn:
+        await conn.run_sync(UUIDBase.metadata.drop_all)
+
+    drop_database(TEST_DB_URI)
+
+
+@pytest.fixture(scope="function")
+async def db_session(
+    test_engine: AsyncEngine,
+) -> AsyncGenerator[AsyncSession, None]:
+    """Database session fixture."""
+    session_maker = sqlalchemy_config.create_session_maker()
+    async with test_engine.connect() as conn:
+        async with conn.begin():
+            async with session_maker() as session:
+                yield session
 
 
 @pytest.fixture(scope="function")
 async def test_client(
     test_app: Litestar,
-    setup_test_db: AsyncGenerator,
+    test_engine: AsyncEngine,
 ) -> AsyncIterator[AsyncTestClient[Litestar]]:
     """Test client fixture."""
     async with AsyncTestClient(app=test_app) as client:
         yield client
-
-
-test_engine = create_async_engine(TEST_DB_URI, echo=False)
-session_local = async_sessionmaker(
-    test_engine,
-    autocommit=False,
-    autoflush=False,
-)
-
-
-@pytest.fixture(scope="function")
-async def setup_test_db() -> AsyncGenerator:
-    """Setup test database."""
-    async with test_engine.begin() as conn:
-        await conn.run_sync(UUIDBase.metadata.create_all)
-
-    yield
-
-    async with test_engine.begin() as conn:
-        await conn.run_sync(UUIDBase.metadata.drop_all)
-
-
-@pytest.fixture(scope="function")
-async def db_session(
-    setup_test_db: AsyncGenerator,
-) -> AsyncGenerator:
-    """Database session fixture."""
-    async with session_local() as session:
-        yield session
-        await session.rollback()
 
 
 @pytest.fixture(scope="function")
