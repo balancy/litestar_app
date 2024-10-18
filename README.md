@@ -1,1 +1,1 @@
-# Project template using UV dependency manager + Litestar framework
+# A simple Litestar app to test out the basic framework functionality

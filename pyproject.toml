@@ -1,7 +1,7 @@
 [project]
 name = "litestar-project"
 version = "0.1.0"
-description = "Simple litestar app to test basic usage of framework"
+description = "A simple Litestar app to test out the basic framework functionality."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
