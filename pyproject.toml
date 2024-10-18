@@ -45,6 +45,6 @@ log_cli_level = "WARNING"
 log_level = "WARNING"
 
 [tool.coverage.report]
-fail_under = 10
+fail_under = 85
 skip_empty = true
 skip_covered = true
