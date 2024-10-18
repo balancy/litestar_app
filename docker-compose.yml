@@ -1,6 +1,8 @@
 services:
   app:
-    build: .
+    build:
+      context: .
+      target: prod
     container_name: litestar-app
     ports:
       - "8000:8000"
@@ -14,11 +16,9 @@ services:
       postgres:
         condition: service_healthy
     command: >
-      bash -c "alembic upgrade head && uvicorn app:app --reload"
+      bash -c "alembic upgrade head && uvicorn app:app --workers 4 --log-level info --access-log"
     volumes:
-      - ./src:/app/src
       - session_data:/app/session_data
-
 
   postgres:
     image: postgres:16
@@ -28,13 +28,13 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=db
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 2s
       retries: 5
       start_interval: 2s
-    # volumes:
-    #   - postgres_data:/var/lib/postgresql/data
-
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
   session_data:
+  postgres_data:

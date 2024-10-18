@@ -1,7 +1,7 @@
 [project]
-name = "litestar-project-template"
+name = "litestar-project"
 version = "0.1.0"
-description = "Template to start with litestar framework"
+description = "Simple litestar app to test basic usage of framework"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -10,14 +10,15 @@ dependencies = [
   "psycopg[binary]>=3.2.3",
 ]
 
-[tool.uv]
-dev-dependencies = [
+[project.optional-dependencies]
+dev = [
   "ruff>=0.6.8",
   "black>=24.8.0",
   "pytest-asyncio>=0.24.0",
   "pytest-cov>=5.0.0",
   "sqlalchemy-utils>=0.41.2",
 ]
+
 
 [tool.ruff]
 lint.select = ["ALL"]

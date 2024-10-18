@@ -1,0 +1,12 @@
+services:
+  app:
+    build:
+      context: .
+      target: dev
+    environment:
+      - DEBUG=True
+    command: >
+      bash -c "alembic upgrade head && uvicorn app:app --reload --log-level debug"
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/src/tests

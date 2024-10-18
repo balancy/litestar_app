@@ -1,10 +1,13 @@
-all: up
+all: dev
 
 run:
 	@cd src && uvicorn app:app --reload
 
-up:
+dev:
 	@docker-compose up -d --build --remove-orphans
+
+prod:
+	@docker-compose -f docker-compose.yml up -d --build --remove-orphans
 
 down:
 	@docker-compose down

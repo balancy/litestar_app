@@ -353,7 +353,7 @@ structlog = [
 ]
 
 [[package]]
-name = "litestar-project-template"
+name = "litestar-project"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
@@ -362,7 +362,7 @@ dependencies = [
     { name = "psycopg", extra = ["binary"] },
 ]
 
-[package.dev-dependencies]
+[package.optional-dependencies]
 dev = [
     { name = "black" },
     { name = "pytest-asyncio" },
@@ -373,18 +373,14 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "black", marker = "extra == 'dev'", specifier = ">=24.8.0" },
     { name = "environs", specifier = ">=11.0.0" },
     { name = "litestar", extras = ["sqlalchemy", "standard", "structlog"], specifier = ">=2.12.1" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.2.3" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "black", specifier = ">=24.8.0" },
-    { name = "pytest-asyncio", specifier = ">=0.24.0" },
-    { name = "pytest-cov", specifier = ">=5.0.0" },
-    { name = "ruff", specifier = ">=0.6.8" },
-    { name = "sqlalchemy-utils", specifier = ">=0.41.2" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.24.0" },
+    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=5.0.0" },
+    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6.8" },
+    { name = "sqlalchemy-utils", marker = "extra == 'dev'", specifier = ">=0.41.2" },
 ]
 
 [[package]]
